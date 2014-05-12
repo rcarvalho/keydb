@@ -2,6 +2,8 @@
 require 'cgi'
 require 'digest/md5'
 require 'lz4-ruby'
+require 'zlib'
+
 class LocalDB
 	def self.write db, obj_name, value
 		# Not sure if you have to utf8 it before you save it or not
@@ -10,17 +12,14 @@ class LocalDB
 		begin
 			File.open(self.file_name(db, obj_name), "w:UTF-8") do |f|
 				f.flock(File::LOCK_EX)
-				# d = LZ4::compress(value)
-				# puts "input lz4 result: #{d.encoding}"
-				f.write(value)
+				# d = LZ4::compress(value).force_encoding('utf-8')
+				d = Zlib::Deflate.deflate(value).force_encoding('utf-8')
+				# puts "deflate output encoding: #{d.encoding}"
+				f.write(d)
 			end
 		rescue Errno::ENOENT
 			LocalDB.create db
-			File.open(self.file_name(db, obj_name), "w:UTF-8") do |f|
-				f.flock(File::LOCK_EX)
-				# LZ4::compress(value)
-				f.write(value)
-			end
+			retry
 		end
 		return true
 	rescue Errno::ENOENT
@@ -32,8 +31,8 @@ class LocalDB
 		fn = self.file_name(db, obj_name)
 		if File.exists?(fn)
 			data = File.read(fn, encoding: 'UTF-8')
-			# puts "output encoding from file: #{d.encoding}"
-    	# data = LZ4::uncompress(d)
+			# data = LZ4::uncompress(data).force_encoding('utf-8')
+			data = Zlib::Inflate.inflate(data).force_encoding('utf-8')
 			# puts "output format: #{data.encoding}"
 		end
 		data

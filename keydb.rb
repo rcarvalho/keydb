@@ -26,7 +26,6 @@ class Handler  < EventMachine::Connection
   end
 
   def process_http_request
-    puts "got a request"
     resp = EventMachine::DelegatedHttpResponse.new( self )
 
     EM.next_tick do
