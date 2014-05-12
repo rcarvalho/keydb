@@ -45,12 +45,17 @@ Write
 ==========
 To write a value 'writethis' to the key 'page1' from the database 'pages'
 ```
-# POST http://localhost:5029/pages/page1?value=writethis&API_KEY=55555555
+POST http://localhost:5029/pages/page1?value=writethis&api_key=55555555
+
+curl http://localhost:5029/pages/page1 --data "api_key=55555555&value=test"
 ```
 
 Read
 ==========
 To read with a key called 'page1' from database 'pages'
 ```
-# GET http://localhost:5029/pages/page1?API_KEY=55555555
+GET http://localhost:5029/pages/page1?api_key=55555555
+
+curl http://localhost:5029/pages/page1?api_key=55555555
+
 ```
