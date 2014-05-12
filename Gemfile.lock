@@ -1,0 +1,42 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.2.8)
+    cookiejar (0.3.0)
+    crack (0.3.1)
+    diffy (3.0.4)
+    em-http-request (1.0.2)
+      addressable (>= 2.2.3)
+      cookiejar
+      em-socksify
+      eventmachine (>= 1.0.0.beta.4)
+      http_parser.rb (>= 0.5.3)
+    em-socksify (0.2.0)
+      eventmachine (>= 1.0.0.beta.4)
+    em-synchrony (1.0.2)
+      eventmachine (>= 1.0.0.beta.1)
+    eventmachine (1.0.0.rc.4)
+    http_parser.rb (0.5.3)
+    httparty (0.8.3)
+      multi_json (~> 1.0)
+      multi_xml
+    lz4-ruby (0.3.1)
+    multi_json (1.3.6)
+    multi_xml (0.5.1)
+    rcarvalho-eventmachine_httpserver (0.2.1.1)
+    rcarvalho-happening (0.2.5.3)
+      em-http-request
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  crack
+  diffy
+  em-http-request
+  em-synchrony
+  eventmachine
+  httparty
+  lz4-ruby
+  rcarvalho-eventmachine_httpserver
+  rcarvalho-happening
