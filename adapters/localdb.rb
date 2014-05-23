@@ -6,8 +6,8 @@ require 'lz4-ruby'
 class LocalDB
 	def self.write db, obj_name, value
 		begin
-			File.open(self.file_name(db, obj_name), "w:UTF-8") do |f|
-				self.ensure_file_path(db, obj_name)
+			self.ensure_file_path(db, obj_name)
+			File.open(self.file_name(db, obj_name),'wb') do |f|
 				f.flock(File::LOCK_EX)
 				d = LZ4::compress(value)
 				f.write(d)
@@ -25,7 +25,7 @@ class LocalDB
 		data = nil
 		fn = self.file_name(db, obj_name)
 		if File.exists?(fn)
-			data = File.read(fn, encoding: 'UTF-8')
+			data = File.open(fn, 'rb').read
 			data = LZ4::uncompress(data).force_encoding(Encoding::UTF_8)
 		end
 		data
