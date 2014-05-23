@@ -86,6 +86,11 @@ class Handler  < EventMachine::Connection
 	    			end
     				resp.send_response
 	    		}.resume
+        elsif params['command'].first == 'count'
+          Fiber.new{
+            resp.content = Handler.format_response({:count => COREDB.count(db_name)}, callback)
+            resp.send_response
+          }.resume
     		end
 	    else
         # Write
@@ -108,13 +113,6 @@ class Handler  < EventMachine::Connection
                 # puts "throwing back #{result.encoding}"
                 # result = result.encode('UTF-8', invalid: :replace, undef: :replace)
 				    		resp.content = Handler.format_response({:value => result}, callback)
-				    		resp.send_response
-			    		}.resume
-			    	else
-			    		puts "reading list of files from #{db_name}"
-			    		Fiber.new{
-			    			results, last_key = COREDB.list(db_name, params['marker'].first)
-				    		resp.content = Handler.format_response({:marker => last_key, :keys => results}, callback)
 				    		resp.send_response
 			    		}.resume
 			    	end
