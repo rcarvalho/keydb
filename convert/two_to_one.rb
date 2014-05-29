@@ -1,4 +1,4 @@
-require './../adapters/localdb'
+require './adapters/localdb'
 class TwoToOne
   def self.convert
     Dir.glob("#{dd}/*").each do |basedir|
