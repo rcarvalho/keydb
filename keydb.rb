@@ -99,7 +99,7 @@ class Handler  < EventMachine::Connection
 	    		Fiber.new{
             # puts "getting #{params['value'].first.encoding}"
 	    			ret = COREDB.write(db_name, obj_name, params['value'].first)
-	    			hsh = ret ? {:success => true} : {:error => 'could not save value'}
+	    			hsh = ret ? {:success => true} : {:error => COREDB.errors}
 	    			resp.content = Handler.format_response(hsh, callback)
 	    			resp.send_response
 	    		}.resume

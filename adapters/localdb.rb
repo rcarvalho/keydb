@@ -4,6 +4,10 @@ require 'digest/md5'
 require 'lz4-ruby'
 
 class LocalDB
+	@@errors = nil
+	def self.errors
+		@errors
+	end
 	def self.write db, obj_name, value
 		begin
 			self.ensure_file_path(db, obj_name)
@@ -17,7 +21,8 @@ class LocalDB
 			retry
 		end
 		return true
-	rescue Errno::ENOENT
+	rescue Exception => ex
+		@@errors = ex.message
 		return false
 	end
 
@@ -53,7 +58,7 @@ class LocalDB
 
 	def self.count db
 		dd = self.data_dir(db)
-		Dir.glob("#{dd}/*/*/*").count
+		Dir.glob("#{dd}/*/*").count
 	end
 
 	protected
@@ -64,7 +69,7 @@ class LocalDB
 
 	def self.file_name db, obj_name
 		hex = Digest::MD5.hexdigest(obj_name)
-		"#{self.data_dir(db)}/#{hex[0..2]}/#{hex[3..5]}/#{hex[6..31]}"
+		"#{self.data_dir(db)}/#{hex[0..2]}/#{hex[3..31]}"
 	end
 
 	def self.ensure_file_path db, obj_name
@@ -72,10 +77,6 @@ class LocalDB
 		partial_dir = "#{self.data_dir(db)}/#{hex[0..2]}"
 		unless File.exists?(partial_dir)
 			Dir::mkdir(partial_dir)
-		end
-		full_dir = "#{self.data_dir(db)}/#{hex[0..2]}/#{hex[3..5]}"
-		unless File.exists?(full_dir)
-			Dir::mkdir(full_dir)
 		end
 	end
 end
